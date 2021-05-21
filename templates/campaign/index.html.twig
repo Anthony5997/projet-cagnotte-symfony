@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Campaign index{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Campaign index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Goal</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for campaign in campaigns %}
+            <tr>
+                <td>{{ campaign.id }}</td>
+                <td>{{ campaign.title }}</td>
+                <td>{{ campaign.content }}</td>
+                <td>{{ campaign.goal }}</td>
+                <td>{{ campaign.name }}</td>
+                <td>{{ campaign.email }}</td>
+                <td>
+                    <a class="waves-effect waves-light btn" href="{{ path('campaign_show', {'id': campaign.id}) }}">show</a>
+                    <a class="waves-effect waves-light btn" href="{{ path('campaign_edit', {'id': campaign.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <a class="waves-effect waves-light btn" href="{{ path('campaign_new') }}">Create new</a>
+    <br>
+    <br>
+</div>
+
+{% endblock %}

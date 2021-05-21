@@ -1,0 +1,47 @@
+<div class="card">
+    <div class="card-content">
+        <div class="row">
+            {{ form_start(form, {'attr': {'class': 'col s12', 'id': 'payment-form'}}) }}
+            <div class="input-field col s12 l6">
+                {% if not amount %}
+                {{ form_widget(form.amount) }}
+                {{ form_label(form.amount, 'Votre Participation') }}
+                {% else %}
+                {{ form_widget(form.amount,{'attr' : {'value' : amount}})}}
+                {{ form_label(form.amount, 'Votre Participation') }}
+                {% endif %}
+            </div>
+                <div class="input-field col s12 l6">
+                {{ form_label(form.relation.name) }}
+                {{ form_widget(form.relation.name, {'attr': {'class': 'validate'}}) }}
+            </div>
+            <div class="input-field col s12">
+                {{ form_label(form.relation.email) }}
+                {{ form_widget(form.relation.email, {'attr': {'class': 'validate'}}) }}
+            </div>
+            <div class="input-field col s12 l12">
+                <label>
+                        {{ form_widget(form.relation.isAnonymous, {'attr': {'class': 'validate'}}) }}
+                        <span>Masquer mon identité auprès des autres participants</span>
+                </label>
+            </div>
+            <div class="clearfix" style="padding: 20px"></div>
+                <h5 class="center">Paiement</h5>
+            <div class="input-field col s12">
+                <div id="card-element"></div>
+            </div>
+            <div class="row" style="margin-top: 20px">
+                <div class="input-field col s12 l6 ">
+                    <a href="{{ path ('campaign_show',{'id': campaign.id})}}" class="btn btn-large waves-effect waves-light grey col s12">Annuler</a>
+                </div>
+                <div class="input-field col s12 l6">
+                    <button class="btn btn-large waves-effect waves-light pink lighten-1 col s12" type="submit" name="action">
+                        {{ button_label|default('Save') }}
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
