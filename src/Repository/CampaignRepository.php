@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Campaign;
-use App\Entity\Participant;
 use App\Entity\Payment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -68,17 +67,4 @@ class CampaignRepository extends ServiceEntityRepository
         )->setParameter('value', $value->getId());;
         return $query->getResult();
     }
-
-
-    /*
-    public function findOneBySomeField($value): ?Campaign
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

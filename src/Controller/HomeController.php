@@ -4,8 +4,6 @@ namespace App\Controller;
 use App\Repository\CampaignRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\PaymentRepository;
-use App\Entity\Campaign;
-use App\Entity\Participant;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;

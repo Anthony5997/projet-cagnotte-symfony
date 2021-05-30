@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ParticipantRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -26,6 +27,9 @@ class Participant
 
     /**
      * @ORM\Column(type="string", length=200)
+     * @Assert\Email(
+     *     message = "L'email '{{ value }}' n'est pas valide"
+     * )
      */
     private $email;
 

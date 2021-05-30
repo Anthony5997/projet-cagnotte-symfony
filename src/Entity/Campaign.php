@@ -53,6 +53,11 @@ class Campaign
      */
     private $participants;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    private $user;
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
@@ -152,5 +157,21 @@ class Campaign
         }
 
         return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function toArray(){
+        return ['id'=>$this->getId(), 'title'=>$this->getTitle(), 'goal'=>$this->getGoal(), 'name' => $this->getName()];
     }
 }

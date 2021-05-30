@@ -24,7 +24,8 @@
             </div>
             <!--   Form Section   -->
     {{ include('payment/_form.html.twig') }}
-            
+
+
         </div>
     </div>
 
@@ -69,7 +70,7 @@
 {% block javascripts %}
     <script src="https://js.stripe.com/v3/"></script>
     <script>
-    var stripe = Stripe("pk_test_51ItX7eBHDY4ycr92mFEAvn54rMc7e54g2jVCXyzZzgiex8ZinC4hiM0cvYdnkE6lpIZoqpCvEORvJOBEZE6qTXbN00qzGkEhaZ");
+    var stripe = Stripe("pk_test_51ItX7eBHDY4ycr92mFEAvn54rMc7e54g2jVCXyzZzgiex8ZinC4hiM0cvYdnkE6lpIZoqpCvEORvJOBEZE6qTXbN00qzGkEhaZ&currency=eur&disable-funding=credit card");
     // The items the customer wants to buy
            var elements = stripe.elements();
 
@@ -94,6 +95,29 @@
         var card = elements.create("card", { style: style });
         // Stripe injects an iframe into the DOM
         card.mount("#card-element");
+    </script>
+        <script src="https://www.paypal.com/sdk/js?client-id=AUuiFYVTVw2UW21kQR4B0JtlVAkSrPkZjBvk3rA8xriET1y5d2X5Fdb6AVtiL2ppjPnWXETtO6TOEStc&currency=EUR"> // Replace YOUR_CLIENT_ID with your sandbox client ID
+    </script>
+    <!-- Add the checkout buttons, set up the order and approve the order -->
+    <script>
+
+      paypal.Buttons({
+        createOrder: function(data, actions) {
+    let montant = document.querySelector("#payment_amount").value
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: montant
+              }
+            }]
+          });
+        },
+        onApprove: function(data, actions) {
+          return actions.order.capture().then(function(details) {
+            document.querySelector('#payment-form').submit()
+          });
+        }
+      }).render('#paypal-button-container'); // Display payment options on your web page
     </script>
 
 {% endblock %}

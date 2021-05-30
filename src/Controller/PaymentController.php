@@ -28,7 +28,7 @@ class PaymentController extends AbstractController
     }
 
     /**
-     * @Route("/new{id}", name="payment_new", methods={"GET","POST"})
+     * @Route("/new/{id}", name="payment_new", methods={"GET","POST"})
      */
     public function new(Request $request, CampaignRepository $campaignRepository, Campaign $campaign ): Response
     {

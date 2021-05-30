@@ -3,46 +3,65 @@
 {% block title %}Campaign index{% endblock %}
 
 {% block body %}
-<div class="container">
-    <h1>Campaign index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Content</th>
-                <th>Goal</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for campaign in campaigns %}
-            <tr>
-                <td>{{ campaign.id }}</td>
-                <td>{{ campaign.title }}</td>
-                <td>{{ campaign.content }}</td>
-                <td>{{ campaign.goal }}</td>
-                <td>{{ campaign.name }}</td>
-                <td>{{ campaign.email }}</td>
-                <td>
-                    <a class="waves-effect waves-light btn" href="{{ path('campaign_show', {'id': campaign.id}) }}">show</a>
-                    <a class="waves-effect waves-light btn" href="{{ path('campaign_edit', {'id': campaign.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="9">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <br>
-    <a class="waves-effect waves-light btn" href="{{ path('campaign_new') }}">Create new</a>
-    <br>
-    <br>
+<div id='formSearch'>
+   
+        <div class="input-field">
+            <i class="material-icons prefix">search</i>
+            <input placeholder="Recherchez une cagnotte" type="text" class="validate search-cagnotte">
+        
+    </div>  
+</div> 
+ 
+{{ include('campaign/_search.html.twig') }}
+   
+<div id="campagnesIndex">
+<div class="row">
+    <div class="cagnotte-list"></div>
 </div>
+    <div class="container">
+        <div class="row">
+            {% for campaign in campaigns %}
+                <div class="col s12 m4">
+                    
+                    {% set participantCounter = 0 %}
+                    {% set totalAmount = 0 %}
+                    
+                    {% for payment in payments %}
+                        {% if payment.relation.campaignId.id == campaign.id %}
+                        {% set totalAmount = totalAmount + payment.amount %}
+                        {% set participantCounter = participantCounter + 1 %}
 
+                        {% endif %}
+                    {% endfor %}
+                    {% set pourcentageGoal = totalAmount * 100 / campaign.goal %}
+                <a class="carousel-item" href="{{ path('campaign_show', {'id': campaign.id}) }}">
+                    <div class="card center">
+                        <div class="card-content">
+                            <span class="card-title teal-text">{{ campaign.title }}</span>
+                            <span ><p class="teal-text">{{ campaign.name }}</p></span>
+                            <p class="black-text">{{ campaign.content }}</p>
+                        </div>
+                        <div class="card-action">
+                            <div class="row black-text">
+                                <div class="col s6">
+                                    <i class="material-icons teal-text">account_circle</i> <b>{{participantCounter}}</b>
+                                </div>
+                                <div class="col s6">
+                                    <i class="material-icons teal-text">euro_symbol</i> <b>{{totalAmount}}</b>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress">
+                            <div class="determinate" style="width:{{pourcentageGoal}}%"></div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+            <script type="text/javascript" src="{{asset('assets/js/async-search.js')}}"></script>
 {% endblock %}

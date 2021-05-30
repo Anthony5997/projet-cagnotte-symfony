@@ -28,14 +28,19 @@
             <div class="clearfix" style="padding: 20px"></div>
                 <h5 class="center">Paiement</h5>
             <div class="input-field col s12">
+            <h5 class="card-title teal-text center">VIA Stripe</h5>
                 <div id="card-element"></div>
+            </div>
+             <div class="input-field col s12">
+               <h5 class="card-title teal-text center">VIA Paypal</h5>
+                 <div id="paypal-button-container"></div>
             </div>
             <div class="row" style="margin-top: 20px">
                 <div class="input-field col s12 l6 ">
                     <a href="{{ path ('campaign_show',{'id': campaign.id})}}" class="btn btn-large waves-effect waves-light grey col s12">Annuler</a>
                 </div>
                 <div class="input-field col s12 l6">
-                    <button class="btn btn-large waves-effect waves-light pink lighten-1 col s12" type="submit" name="action">
+                    <button class="btn btn-large waves-effect waves-light blue-grey lighten-1 col s12" type="submit" name="action">
                         {{ button_label|default('Save') }}
                         <i class="material-icons right">send</i>
                     </button>

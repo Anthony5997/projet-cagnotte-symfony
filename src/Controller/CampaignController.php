@@ -3,10 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Campaign;
-use App\Entity\Participant;
-use App\Entity\Payment;
+use App\Entity\User;
 use App\Form\Campaign1Type;
 use App\Repository\CampaignRepository;
+use App\Repository\ParticipantRepository;
+use App\Repository\PaymentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,11 +21,30 @@ class CampaignController extends AbstractController
     /**
      * @Route("/", name="campaign_index", methods={"GET"})
      */
-    public function index(CampaignRepository $campaignRepository): Response
+    public function index(CampaignRepository $campaignRepository, ParticipantRepository $participantRepository, PaymentRepository $paymentRepository): Response
     {
+        $campagnes =  $campaignRepository->findAll();
+        $participants = $participantRepository->findBy(['campaignId' =>$campagnes]);
+
+        $payments = $paymentRepository->findBy(['relation'=> $participants]);
         return $this->render('campaign/index.html.twig', [
-            'campaigns' => $campaignRepository->findAll(),
+            'campaigns' => $campagnes,
+            'payments' => $payments, 
+
         ]);
+    }
+    /**
+     * @Route("/search", name="campaign_search", methods={"GET"})
+     */
+    public function search(CampaignRepository $campaignRepository, ParticipantRepository $participantRepository, PaymentRepository $paymentRepository)
+    {
+        $allCampaign = [];
+        $campaigns =  $campaignRepository->findAll();
+        foreach($campaigns as $campaign){
+          array_push($allCampaign, $campaign->toArray());
+        }
+        echo json_encode($allCampaign);
+        die;
     }
 
     /**
@@ -32,21 +52,28 @@ class CampaignController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $campaignName = $request->get('campaignName');
         $campaign = new Campaign();
         $form = $this->createForm(Campaign1Type::class, $campaign);
         $form->handleRequest($request);
 
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
+            $campaign->setUser($this->getUser());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($campaign);
             $entityManager->flush();
 
             return $this->redirectToRoute('campaign_index');
         }
-
         return $this->render('campaign/new.html.twig', [
             'campaign' => $campaign,
-            'form' => $form->createView(),
+            'formCreated' => $form->createView(),
+            'campaignName' => $campaignName,
+            'user' => $this->getUser(),
         ]);
     }
 
@@ -62,8 +89,7 @@ class CampaignController extends AbstractController
         return $this->render('campaign/show.html.twig', [
             'campaign' => $campaign,
             'payments'=>$payments,
-            'nb_participant'=>count($payments),
-            'nb_thunas'=> $sumPayment[0][1]
+            'user' => $this->getUser(),
             ]);
            
 
@@ -78,14 +104,18 @@ class CampaignController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $this->getDoctrine()->getManager()->flush();
+
 
             return $this->redirectToRoute('campaign_index');
         }
 
         return $this->render('campaign/edit.html.twig', [
             'campaign' => $campaign,
-            'form' => $form->createView(),
+            'campaignName' => $campaign->getName(),
+            'formEdit' => $form->createView(),
+            'user' => $this->getUser(),
         ]);
     }
 
